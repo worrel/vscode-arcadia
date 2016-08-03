@@ -17,9 +17,7 @@
 (defn activate
  [context]
  (println "activating vscode-arcadia")
- (push-all-subs context repl/activate-repl)
- (let [disposable (util/register-command! "arcadia.doIt" command)]
-   (push-subscription! context disposable)))
+ (push-all-subs context repl/activate-repl))
 
 (defn deactivate
  []

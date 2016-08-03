@@ -21330,6 +21330,9 @@ vscode.util.push_subscription_BANG_ = function(a, b) {
 vscode.util.info_message = function(a) {
   return vscode.util.vscode.window.showInformationMessage(a);
 };
+vscode.util.get_config = function(a) {
+  return vscode.util.vscode.workspace.getConfiguration(a);
+};
 vscode.util.resolved_promise = function(a) {
   return Promise.resolve(a);
 };
@@ -21343,7 +21346,7 @@ var arcadia = {vscode:{}};
 arcadia.vscode.repl = {};
 arcadia.vscode.repl.dgram = require("dgram");
 arcadia.vscode.repl.vscode = require("vscode");
-arcadia.vscode.repl.arcadia = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "host", "host", -1558485167), "localhost", new cljs.core.Keyword(null, "port", "port", 1534937262), 11211], null);
+arcadia.vscode.repl.repl_options = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "host", "host", -1558485167), vscode.util.get_config.call(null, "arcadia.replHost"), new cljs.core.Keyword(null, "port", "port", 1534937262), vscode.util.get_config.call(null, "arcadia.replPort")], null);
 arcadia.vscode.repl.PARENS = "[]{}()";
 arcadia.vscode.repl.repl = cljs.core.atom.call(null, null);
 arcadia.vscode.repl.process_parens = function(a) {
@@ -21397,21 +21400,21 @@ arcadia.vscode.repl.connect_repl = function(a, b, c) {
 arcadia.vscode.repl.start_repl = function() {
   return cljs.core.truth_(cljs.core.deref.call(null, arcadia.vscode.repl.repl)) ? vscode.util.resolved_promise.call(null, !0) : vscode.util.new_promise.call(null, function(a) {
     cljs.core.println.call(null, "Starting REPL...");
-    var b = (new cljs.core.Keyword(null, "host", "host", -1558485167)).cljs$core$IFn$_invoke$arity$1(arcadia.vscode.repl.arcadia), c = (new cljs.core.Keyword(null, "port", "port", 1534937262)).cljs$core$IFn$_invoke$arity$1(arcadia.vscode.repl.arcadia), d = arcadia.vscode.repl.vscode.window.createOutputChannel("Arcadia REPL"), e = arcadia.vscode.repl.connect_repl.call(null, d, b, c);
+    var b = (new cljs.core.Keyword(null, "host", "host", -1558485167)).cljs$core$IFn$_invoke$arity$1(arcadia.vscode.repl.repl_options), c = (new cljs.core.Keyword(null, "port", "port", 1534937262)).cljs$core$IFn$_invoke$arity$1(arcadia.vscode.repl.repl_options), d = arcadia.vscode.repl.vscode.window.createOutputChannel("Arcadia REPL"), e = arcadia.vscode.repl.connect_repl.call(null, d, b, c);
     d.show(!0);
     cljs.core.println.call(null, "REPL started!");
     cljs.core.reset_BANG_.call(null, arcadia.vscode.repl.repl, new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null, "server", "server", 1499190120), e, new cljs.core.Keyword(null, "input", "input", 556931961), cljs.core.atom.call(null, ""), new cljs.core.Keyword(null, "output", "output", -1105869043), d, new cljs.core.Keyword(null, "host", "host", -1558485167), b, new cljs.core.Keyword(null, "port", "port", 1534937262), c], null));
     return a.call(null, !0);
   });
 };
-arcadia.vscode.repl.send = function(a, b) {
-  return cljs.core.truth_(cljs.core.deref.call(null, arcadia.vscode.repl.repl)) ? vscode.util.then.call(null, arcadia.vscode.repl.handle_input.call(null, b), (new cljs.core.Keyword(null, "output", "output", -1105869043)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, arcadia.vscode.repl.repl)).appendLine(b)) : null;
+arcadia.vscode.repl.send = function(a) {
+  return cljs.core.truth_(cljs.core.deref.call(null, arcadia.vscode.repl.repl)) ? vscode.util.then.call(null, arcadia.vscode.repl.handle_input.call(null, a), (new cljs.core.Keyword(null, "output", "output", -1105869043)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, arcadia.vscode.repl.repl)).appendLine(a)) : null;
 };
 arcadia.vscode.repl.send_line = function(a) {
-  return arcadia.vscode.repl.send.call(null, a, a.document.lineAt(a.selection.start).text);
+  return arcadia.vscode.repl.send.call(null, a.document.lineAt(a.selection.start).text);
 };
 arcadia.vscode.repl.send_selection = function(a) {
-  return arcadia.vscode.repl.send.call(null, a, a.document.getText(a.selection));
+  return arcadia.vscode.repl.send.call(null, a.document.getText(a.selection));
 };
 arcadia.vscode.repl.send_file = function(a) {
   return arcadia.vscode.repl.send.call(null, a, a.document.getText());
@@ -21443,9 +21446,7 @@ arcadia.vscode.core.push_all_subs = function(a, b) {
 };
 arcadia.vscode.core.activate = function(a) {
   cljs.core.println.call(null, "activating vscode-arcadia");
-  arcadia.vscode.core.push_all_subs.call(null, a, arcadia.vscode.repl.activate_repl);
-  var b = vscode.util.register_command_BANG_.call(null, "arcadia.doIt", arcadia.vscode.core.command);
-  return vscode.util.push_subscription_BANG_.call(null, a, b);
+  return arcadia.vscode.core.push_all_subs.call(null, a, arcadia.vscode.repl.activate_repl);
 };
 arcadia.vscode.core.deactivate = function() {
   return cljs.core.println.call(null, "vscode-arcadia deactivated");

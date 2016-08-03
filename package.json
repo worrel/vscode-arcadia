@@ -11,15 +11,11 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:arcadia.doIt",
         "onCommand:arcadia.replStart"
     ],
     "main": "./extension",
     "contributes": {
         "commands": [{
-            "command": "arcadia.doIt",
-            "title": "Arcadia: Do It!"
-        },{
             "command": "arcadia.replStart",
             "title": "Arcadia: REPL - Start"
         },{
