@@ -1,0 +1,44 @@
+{
+    "name": "vscode-arcadia",
+    "displayName": "vscode-arcadia",
+    "description": "",
+    "version": "0.0.1",
+    "publisher": "worrel",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:arcadia.doIt",
+        "onCommand:arcadia.replStart"
+    ],
+    "main": "./extension",
+    "contributes": {
+        "commands": [{
+            "command": "arcadia.doIt",
+            "title": "Arcadia: Do It!"
+        },{
+            "command": "arcadia.replStart",
+            "title": "Arcadia: REPL - Start"
+        },{
+            "command": "arcadia.replSendLine",
+            "title": "Arcadia: REPL - Send Line"
+        },{
+            "command": "arcadia.replSendSelection",
+            "title": "Arcadia: REPL - Send Selection"
+        },{
+            "command": "arcadia.replSendFile",
+            "title": "Arcadia: REPL - Send File"
+        }]
+    },
+    "scripts": {
+        "preinstall": "lein cljsbuild once",
+        "vscode:prepublish": "lein cljsbuild once",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "vscode": "^0.11.0"
+    }
+}
