@@ -32,6 +32,22 @@
             "command": "arcadia.replSendFile",
             "title": "Arcadia: REPL - Send File"
         }],
+        "configuration": {
+            "type": "object",
+            "title": "Arcadia Configuration",
+            "properties": {
+                "arcadia.replHost": {
+                    "type": "string",
+                    "default": "localhost",
+                    "description": "REPL host"
+                },
+                "arcadia.replPort": {
+                    "type": "number",
+                    "default": 11211,
+                    "description": "REPL port"
+                }
+            }
+        },
         "keybindings": [{
             "command": "arcadia.replSendLine",
             "key": "ctrl+, l",

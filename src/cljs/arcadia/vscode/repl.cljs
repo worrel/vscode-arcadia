@@ -1,13 +1,15 @@
 (ns arcadia.vscode.repl
   (:require [vscode.util 
               :as util 
-              :refer [export! new-promise resolved-promise then 
+              :refer [export! get-config new-promise resolved-promise then 
                       register-command! register-text-editor-command!]]))
 
 (def dgram (js/require "dgram"))
 (def vscode (js/require "vscode"))
 
-(def arcadia {:host "localhost" :port 11211})
+(def repl-options {:host (get-config "arcadia.replHost") 
+                   :port (get-config "arcadia.replPort")})
+
 (def PARENS "[]{}()")
 
 (def repl (atom nil))
@@ -83,8 +85,8 @@
     (new-promise
       (fn [resolve]
         (println "Starting REPL...")
-        (let [host (:host arcadia)
-              port (:port arcadia)
+        (let [host (:host repl-options)
+              port (:port repl-options)
               out (.createOutputChannel (.. vscode -window) "Arcadia REPL")
               conn (connect-repl out host port)]
           (.show out true)
@@ -98,7 +100,7 @@
           (resolve true))))))
 
 (defn send 
-  [editor msg]
+  [msg]
   (when @repl
     (->
       (handle-input msg)
@@ -106,14 +108,14 @@
 
 (defn send-line
   [editor]
-  (send editor 
+  (send 
     (-> (.-document editor)
         (.lineAt (.. editor -selection -start))
         (.-text))))
 
 (defn send-selection
   [editor]
-  (send editor 
+  (send 
     (-> (.-document editor)
         (.getText (.-selection editor)))))
   

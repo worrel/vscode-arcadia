@@ -22,6 +22,10 @@
  [msg]
  (.showInformationMessage (.. vscode -window) msg))
 
+(defn get-config
+ [path]
+ (.. vscode -workspace (getConfiguration path)))
+ 
 (defn resolved-promise
  [body]
  (.resolve js/Promise body))
@@ -32,4 +36,4 @@
 
 (defn then
  [p f]
- (.then p f)) 
+ (.then p f))
