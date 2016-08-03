@@ -31,6 +31,19 @@
         },{
             "command": "arcadia.replSendFile",
             "title": "Arcadia: REPL - Send File"
+        }],
+        "keybindings": [{
+            "command": "arcadia.replSendLine",
+            "key": "ctrl+, l",
+            "mac": "ctrl+, l"
+        },{
+            "command": "arcadia.replSendSelection",
+            "key": "ctrl+, s",
+            "mac": "ctrl+, s"
+        },{
+            "command": "arcadia.replSendFile",
+            "key": "ctrl+, f",
+            "mac": "ctrl+, f"
         }]
     },
     "scripts": {
