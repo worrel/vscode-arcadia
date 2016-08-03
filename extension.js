@@ -21598,20 +21598,17 @@ arcadia.vscode.parens.complete_form = function(a) {
   }
 };
 arcadia.vscode.parens.complete_form.cljs$core$IFn$_invoke$arity$1 = function(a) {
-  cljs.core.println.call(null, "completing acc\x3d", a);
   return cljs.core.dissoc.call(null, function(b) {
     return cljs.core.truth_(b) ? cljs.core.update.call(null, a, new cljs.core.Keyword(null, "forms", "forms", 2045992350), cljs.core.conj, b) : a;
   }.call(null, arcadia.vscode.parens.kill_ws.call(null, (new cljs.core.Keyword(null, "form", "form", -1624062471)).cljs$core$IFn$_invoke$arity$1(a))), new cljs.core.Keyword(null, "form", "form", -1624062471));
 };
 arcadia.vscode.parens.complete_form.cljs$core$IFn$_invoke$arity$2 = function(a, b) {
-  cljs.core.println.call(null, "completing with", b, ",acc\x3d", a);
   return arcadia.vscode.parens.complete_form.call(null, cljs.core.update.call(null, a, new cljs.core.Keyword(null, "form", "form", -1624062471), cljs.core.str, b));
 };
 arcadia.vscode.parens.complete_form.cljs$lang$maxFixedArity = 2;
 arcadia.vscode.parens.check_complete = function(a, b, c) {
   a = null != a && (a.cljs$lang$protocol_mask$partition0$ & 64 || a.cljs$core$ISeq$) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a;
   var d = cljs.core.get.call(null, a, new cljs.core.Keyword(null, "stack", "stack", -793405930)), e = cljs.core.get.call(null, a, new cljs.core.Keyword(null, "form", "form", -1624062471)), f = cljs.core.get.call(null, a, new cljs.core.Keyword(null, "opened", "opened", -1451743091));
-  cljs.core.println.call(null, "checking", b, ",acc\x3d", a);
   return cljs.core._EQ_.call(null, new cljs.core.Keyword(null, "open", "open", -1763596448), b) && !cljs.core.empty_QMARK_.call(null, e) && cljs.core._EQ_.call(null, f, 1) ? arcadia.vscode.parens.complete_form.call(null, a) : cljs.core._EQ_.call(null, new cljs.core.Keyword(null, "close", "close", 1835149582), b) && cljs.core.empty_QMARK_.call(null, d) && 0 < f ? arcadia.vscode.parens.complete_form.call(null, a, c) : cljs.core._EQ_.call(null, new cljs.core.Keyword(null, "close", "close", 1835149582), 
   b) ? arcadia.vscode.parens.add_to_form.call(null, a, c) : a;
 };
@@ -21627,18 +21624,7 @@ arcadia.vscode.parens.close_parens = function(a, b) {
 arcadia.vscode.parens.parse_forms = function(a) {
   return cljs.core.reduce.call(null, function(a, c) {
     var d = null != a && (a.cljs$lang$protocol_mask$partition0$ & 64 || a.cljs$core$ISeq$) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, e = cljs.core.get.call(null, d, new cljs.core.Keyword(null, "stack", "stack", -793405930)), f = arcadia.vscode.parens.PARENS.indexOf(c);
-    if (cljs.core._EQ_.call(null, -1, f)) {
-      return cljs.core.println.call(null, "adding", c, ",acc\x3d", d), arcadia.vscode.parens.add_to_form.call(null, d, c);
-    }
-    if (cljs.core.not_EQ_.call(null, 0, cljs.core.mod.call(null, f, 2))) {
-      if (cljs.core.empty_QMARK_.call(null, e) || cljs.core.not_EQ_.call(null, arcadia.vscode.parens.PARENS.indexOf(cljs.core.peek.call(null, e)), f - 1)) {
-        return cljs.core.println.call(null, "done", c, ",acc\x3d", d), cljs.core.reduced.call(null, arcadia.vscode.parens.add_to_form.call(null, d, c));
-      }
-      cljs.core.println.call(null, "closing", c, ",acc\x3d", d);
-      return arcadia.vscode.parens.close_parens.call(null, d, c);
-    }
-    cljs.core.println.call(null, "opening", c, ",acc\x3d", d);
-    return arcadia.vscode.parens.open_parens.call(null, d, c);
+    return cljs.core._EQ_.call(null, -1, f) ? arcadia.vscode.parens.add_to_form.call(null, d, c) : cljs.core.not_EQ_.call(null, 0, cljs.core.mod.call(null, f, 2)) ? cljs.core.empty_QMARK_.call(null, e) || cljs.core.not_EQ_.call(null, arcadia.vscode.parens.PARENS.indexOf(cljs.core.peek.call(null, e)), f - 1) ? cljs.core.reduced.call(null, arcadia.vscode.parens.add_to_form.call(null, d, c)) : arcadia.vscode.parens.close_parens.call(null, d, c) : arcadia.vscode.parens.open_parens.call(null, d, c);
   }, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "stack", "stack", -793405930), cljs.core.PersistentVector.EMPTY, new cljs.core.Keyword(null, "forms", "forms", 2045992350), cljs.core.PersistentVector.EMPTY], null), a);
 };
 arcadia.vscode.parens.check_forms = function(a) {
