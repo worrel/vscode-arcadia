@@ -23,8 +23,10 @@
  (.showInformationMessage (.. vscode -window) msg))
 
 (defn get-config
- [path]
- (.. vscode -workspace (getConfiguration path)))
+ ([path]
+  (.. vscode -workspace (getConfiguration path)))
+ ([conf key]
+  (.get conf key)))
  
 (defn resolved-promise
  [body]

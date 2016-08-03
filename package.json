@@ -11,6 +11,7 @@
         "Other"
     ],
     "activationEvents": [
+        "onLanguage:clojure",
         "onCommand:arcadia.replStart"
     ],
     "main": "./extension",

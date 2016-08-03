@@ -8,19 +8,18 @@ clicking `Debug` > `Start`.  This runs the compiled
 extension.js file in the root folder.
 
 Ensure Unity is up & an Arcadia project is loaded.
-Then `⌘-shift-p` and run `Arcadia: REPL - Start`.
+Then in VSCode `⌘-shift-p` and run `Arcadia: REPL - Start`.
 
 Once the REPL is active, you can 
 - `Arcadia: REPL - Send Line` (`ctrl+, l`)
 - `Arcadia: REPL - Send Selection` (`ctrl+, s`) or
 - `Arcadia: REPL - Send File` (`ctrl+, f`) 
 to send the current line, selection or file to the
-REPL respectively.
-
-> There's a bug with sending a selection encompassing 
-multiple forms - only the first form is actually 
-evaluated. Probably need to chunk input on newlines
-and send as separate messages.
+REPL respectively. Note that the extension automatically
+activates when VSCode detects current language as Clojure.
+So if you have a Clojure file open but no REPL yet, 
+you can simply `send` the line/selection/file and 
+the REPL will be started for you.  
 
 There is currently no in-REPL editing available, but 
 you can open an empty file & use it as a scratch buffer.
