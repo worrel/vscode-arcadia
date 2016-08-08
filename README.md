@@ -1,7 +1,12 @@
 # vscode-arcadia
 
 ### Getting Started
-To try it out, clone the repo somewhere & open the 
+The quickest way to get going is to install the latest 
+*.vsix file from the releases: 
+[v0.0.1](https://github.com/worrel/vscode-arcadia/releases/download/v0.0.1/vscode-arcadia-0.0.1.vsix)
+into VSCode: `code vscode-arcadia-0.0.1.vsix`
+
+To run from source, clone the repo somewhere & open the 
 root folder in VSCode.  Run the extension in an 
 Extension Development Host by pressing `F5`, or 
 clicking `Debug` > `Start`.  This runs the compiled
