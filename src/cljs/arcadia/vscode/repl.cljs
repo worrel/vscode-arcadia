@@ -1,8 +1,9 @@
 (ns arcadia.vscode.repl
   (:require [arcadia.vscode.parens :as p]
+            [clojure.string :as string]
             [vscode.util 
               :as util 
-              :refer [export! get-config new-promise resolved-promise then 
+              :refer [export! get-config new-promise new-Range resolved-promise then 
                       register-command! register-text-editor-command!]]))
 
 (def dgram (js/require "dgram"))
@@ -48,7 +49,7 @@
             (println "; Arcadia REPL")
             (println (str "; Clojure " (clojure-version)))
             (println (str "; Unity " (UnityEditorInternal.InternalEditorUtility/GetFullUnityVersion)))
-            (println (str "; Mono " (.Invoke (.GetMethod Mono.Runtime "GetDisplayName" (enum-or BindingFlags/NonPublic BindingFlags/Static)) nil nil)))))))
+            (println (str "; Mono " (.Invoke (.GetMethod Mono.Runtime "GetDisplayName" (enum-or System.Reflection.BindingFlags/NonPublic System.Reflection.BindingFlags/Static)) nil nil)))))))
 
 (defn connect-repl 
  [output host port]
@@ -112,10 +113,27 @@
   [editor]
   (send (.. editor -document getText)))
 
+(defn is-comment
+  [line]
+  (let [firstChar (subs (string/trim (.-text line)) 0 1)]
+  (= firstChar #";")))
+
+(defn check-line
+  [line]
+  (not (or (.-isEmptyOrWhitespace line) (is-comment line))))
+
+(defn send-region
+  [editor]
+  (let [activeLine (.. editor -selection -active -line)
+        startLine (last (take-while (fn [n] (not (.. editor -document (lineAt n) -isEmptyOrWhitespace))) (take-while (partial < -1) (iterate dec activeLine))))
+        endLines (filter (comp not is-comment) (take-while (fn [l] (not (.-isEmptyOrWhitespace l))) (map (fn [n] (.. editor -document (lineAt n))) (iterate inc (if (.. editor -document (lineAt startLine) -isEmptyOrWhitespace) (+ startLine 1) startLine)))))]
+    (send (string/join "\n" (map aget endLines (repeat "text"))))))
+
 (defn activate-repl
   []
   (println "Registering REPL commands")
   [ (register-command! "arcadia.replStart" start-repl)
     (register-text-editor-command! "arcadia.replSendLine" send-line)
     (register-text-editor-command! "arcadia.replSendSelection" send-selection)
+    (register-text-editor-command! "arcadia.replSendRegion" send-region)
     (register-text-editor-command! "arcadia.replSendFile" send-file)])
