@@ -21685,6 +21685,9 @@ vscode.util.new_promise = function(a) {
 vscode.util.then = function(a, b) {
   return a.then(b);
 };
+vscode.util.new_Range = function(a, b) {
+  return new vscode.util.vscode.Range(a, b);
+};
 arcadia.vscode.repl = {};
 arcadia.vscode.repl.dgram = require("dgram");
 arcadia.vscode.repl.vscode = require("vscode");
@@ -21733,7 +21736,7 @@ arcadia.vscode.repl.handle_response = function(a, b, c) {
 arcadia.vscode.repl.repl_init = cljs.core.list(new cljs.core.Symbol(null, "binding", "binding", -2114503176, null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Symbol(null, "*warn-on-reflection*", "*warn-on-reflection*", -1574812619, null), !1], null), cljs.core.list(new cljs.core.Symbol(null, "do", "do", 1686842252, null), cljs.core.list(new cljs.core.Symbol(null, "println", "println", -733595439, null), "; Arcadia REPL"), cljs.core.list(new cljs.core.Symbol(null, 
 "println", "println", -733595439, null), cljs.core.list(new cljs.core.Symbol(null, "str", "str", -1564826950, null), "; Clojure ", cljs.core.list(new cljs.core.Symbol(null, "clojure-version", "clojure-version", -210044835, null)))), cljs.core.list(new cljs.core.Symbol(null, "println", "println", -733595439, null), cljs.core.list(new cljs.core.Symbol(null, "str", "str", -1564826950, null), "; Unity ", cljs.core.list(new cljs.core.Symbol("UnityEditorInternal.InternalEditorUtility", "GetFullUnityVersion", 
 "UnityEditorInternal.InternalEditorUtility/GetFullUnityVersion", 195882481, null)))), cljs.core.list(new cljs.core.Symbol(null, "println", "println", -733595439, null), cljs.core.list(new cljs.core.Symbol(null, "str", "str", -1564826950, null), "; Mono ", cljs.core.list(new cljs.core.Symbol(null, ".Invoke", ".Invoke", 1226733740, null), cljs.core.list(new cljs.core.Symbol(null, ".GetMethod", ".GetMethod", -925846449, null), new cljs.core.Symbol(null, "Mono.Runtime", "Mono.Runtime", -465208965, null), 
-"GetDisplayName", cljs.core.list(new cljs.core.Symbol(null, "enum-or", "enum-or", -160749900, null), new cljs.core.Symbol("BindingFlags", "NonPublic", "BindingFlags/NonPublic", 2117715325, null), new cljs.core.Symbol("BindingFlags", "Static", "BindingFlags/Static", 2112399071, null))), null, null)))));
+"GetDisplayName", cljs.core.list(new cljs.core.Symbol(null, "enum-or", "enum-or", -160749900, null), new cljs.core.Symbol("System.Reflection.BindingFlags", "NonPublic", "System.Reflection.BindingFlags/NonPublic", -1611103399, null), new cljs.core.Symbol("System.Reflection.BindingFlags", "Static", "System.Reflection.BindingFlags/Static", -1817681093, null))), null, null)))));
 arcadia.vscode.repl.connect_repl = function(a, b, c) {
   var d = arcadia.vscode.repl.dgram.createSocket("udp4");
   d.on("error", function(a) {
@@ -21780,10 +21783,36 @@ arcadia.vscode.repl.send_selection = function(a) {
 arcadia.vscode.repl.send_file = function(a) {
   return arcadia.vscode.repl.send.call(null, a.document.getText());
 };
+arcadia.vscode.repl.is_comment = function(a) {
+  a = cljs.core.subs.call(null, clojure.string.trim.call(null, a.text), 0, 1);
+  return cljs.core._EQ_.call(null, a, /;/);
+};
+arcadia.vscode.repl.check_line = function(a) {
+  return cljs.core.not.call(null, function() {
+    var b = a.isEmptyOrWhitespace;
+    return cljs.core.truth_(b) ? b : arcadia.vscode.repl.is_comment.call(null, a);
+  }());
+};
+arcadia.vscode.repl.send_region = function(a) {
+  var b = a.selection.active.line, c = cljs.core.last.call(null, cljs.core.take_while.call(null, function(b) {
+    return function(b) {
+      return cljs.core.not.call(null, a.document.lineAt(b).isEmptyOrWhitespace);
+    };
+  }(b), cljs.core.take_while.call(null, cljs.core.partial.call(null, cljs.core._LT_, -1), cljs.core.iterate.call(null, cljs.core.dec, b)))), b = cljs.core.filter.call(null, cljs.core.comp.call(null, cljs.core.not, arcadia.vscode.repl.is_comment), cljs.core.take_while.call(null, function(a, b) {
+    return function(a) {
+      return cljs.core.not.call(null, a.isEmptyOrWhitespace);
+    };
+  }(b, c), cljs.core.map.call(null, function(b, c) {
+    return function(b) {
+      return a.document.lineAt(b);
+    };
+  }(b, c), cljs.core.iterate.call(null, cljs.core.inc, cljs.core.truth_(a.document.lineAt(c).isEmptyOrWhitespace) ? c + 1 : c))));
+  return arcadia.vscode.repl.send.call(null, clojure.string.join.call(null, "\n", cljs.core.map.call(null, cljs.core.aget, b, cljs.core.repeat.call(null, "text"))));
+};
 arcadia.vscode.repl.activate_repl = function() {
   cljs.core.println.call(null, "Registering REPL commands");
-  return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [vscode.util.register_command_BANG_.call(null, "arcadia.replStart", arcadia.vscode.repl.start_repl), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendLine", arcadia.vscode.repl.send_line), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendSelection", arcadia.vscode.repl.send_selection), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendFile", 
-  arcadia.vscode.repl.send_file)], null);
+  return new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [vscode.util.register_command_BANG_.call(null, "arcadia.replStart", arcadia.vscode.repl.start_repl), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendLine", arcadia.vscode.repl.send_line), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendSelection", arcadia.vscode.repl.send_selection), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendRegion", 
+  arcadia.vscode.repl.send_region), vscode.util.register_text_editor_command_BANG_.call(null, "arcadia.replSendFile", arcadia.vscode.repl.send_file)], null);
 };
 arcadia.vscode.core = {};
 cljs.nodejs.enable_util_print_BANG_.call(null);

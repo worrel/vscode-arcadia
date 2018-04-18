@@ -39,3 +39,7 @@
 (defn then
  [p f]
  (.then p f))
+
+(defn new-Range
+ [a b]
+ (js/vscode.util.vscode.Range. a b))

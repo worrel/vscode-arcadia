@@ -28,6 +28,9 @@
         },{
             "command": "arcadia.replSendFile",
             "title": "Arcadia: REPL - Send File"
+        },{
+            "command": "arcadia.replSendRegion",
+            "title": "Arcadia: REPL - Send Region"
         }],
         "configuration": {
             "type": "object",
@@ -57,6 +60,10 @@
             "command": "arcadia.replSendFile",
             "key": "ctrl+, f",
             "mac": "ctrl+, f"
+        },{
+            "command": "arcadia.replSendRegion",
+            "key": "ctrl+enter",
+            "mac": "ctrl+enter"
         }]
     },
     "scripts": {
